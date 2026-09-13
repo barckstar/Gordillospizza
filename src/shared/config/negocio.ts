@@ -72,5 +72,18 @@ export const NEGOCIO = {
   */
   googleCalificacion: { valor: 3.0, cantidad: 2, mostrar: false },
 
-  sitio: "https://gordillos-pizza.vercel.app",
+  /*
+    LA URL REAL DEL SITIO PUBLICADO, comprobada (2026-09-13). Sin guion: el
+    proyecto en Vercel se llama como el repositorio, `Gordillospizza`.
+
+    No es un dato decorativo. De aqui salen el `metadataBase`, el canonical,
+    el sitemap, el host de robots.txt, la imagen para compartir, todos los
+    `@id` y las URLs de imagen del JSON-LD, y el enlace del boton de
+    compartir. Con esto mal, el sitemap manda a Google a un 404 y el marcado
+    declara una direccion que no existe.
+
+    Cuando conecten un dominio propio hay que cambiarlo AQUI y en ningun
+    otro lado.
+  */
+  sitio: "https://gordillospizza.vercel.app",
 } as const;
