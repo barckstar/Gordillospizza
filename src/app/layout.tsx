@@ -59,12 +59,18 @@ export const metadata: Metadata = {
     url: NEGOCIO.sitio,
     title: `${NEGOCIO.nombre} — Pizza en San Ramón`,
     description: `${NEGOCIO.promesa}. ${PIZZAS.length} pizzas, cinco tamaños, de 4 a 16 porciones.`,
+    /*
+      1200x630 es la medida canonica de Open Graph (1,91:1) y la que WhatsApp
+      y Facebook muestran a lo ancho. Antes decia 675 mientras el archivo media
+      676: un desajuste entre lo declarado y lo real es de las cosas que hacen
+      que un rastreador descarte la imagen y muestre solo el dominio.
+    */
     images: [
       {
         url: "/og.jpg",
         width: 1200,
-        height: 675,
-        alt: `Pizza recién salida del horno en ${NEGOCIO.nombre}, San Ramón`,
+        height: 630,
+        alt: `El chef de ${NEGOCIO.nombre} sirviendo una pizza en San Ramón`,
       },
     ],
   },

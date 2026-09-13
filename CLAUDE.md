@@ -123,6 +123,27 @@ y el pixel se descarta; si quedara algun pixel OPACO claro pegado al borde se
 come en una pasada (en este logo no hizo falta: la contaminacion estaba toda en
 el alfa parcial).
 
+## La tarjeta para compartir (og.jpg)
+
+Para una pizzeria de pueblo, **WhatsApp es el canal**: el enlace se comparte por
+ahi, no por buscador. Asi que `og.jpg` no es un frame suelto del video, es una
+tarjeta: el momento en que el chef sirve la pizza, con el logo, "Masa fresca
+hecha diario", las tres cifras y el telefono en una pastilla roja. Quien la
+recibe ya sabe que es y a donde llamar sin abrir nada.
+
+- **1200x630**, la medida canonica de Open Graph (1,91:1). Antes el archivo
+  media 1200x676 mientras el marcado declaraba 675 — y un desajuste entre lo
+  declarado y lo real hace que el rastreador descarte la imagen y muestre solo
+  el dominio.
+- El velo lateral esta calculado para que el texto se lea sobre CUALQUIER frame,
+  no solo sobre este.
+
+**WhatsApp cachea la vista previa por URL y por varios dias.** Si se cambia la
+imagen, el enlace sigue mostrando la vieja. Se fuerza el refresco en el
+Sharing Debugger de Facebook (developers.facebook.com/tools/debug) con "Scrape
+Again" — comparten infraestructura. Compartir la URL con `?v=2` tambien sirve
+como prueba, porque es otra llave de cache.
+
 ## Barra social
 
 Riel fijo al borde derecho con WhatsApp, Instagram, Facebook, Como llegar y
