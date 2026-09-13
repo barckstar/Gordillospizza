@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "marca": "Gordillo's",
+    "titulo": "Pizza",
+    "bloques": [
+      {
+        "id": "promesa",
+        "sobretitulo": "San Ramón, Alajuela",
+        "titulo": "Masa fresca hecha diario",
+        "texto": "Sin congelar, sin atajos. La amasamos cada mañana y la horneamos cuando la pedís."
+      },
+      {
+        "id": "camino",
+        "sobretitulo": "Recién salida",
+        "titulo": "Va en camino",
+        "texto": "Del horno a la caja y de la caja a tu casa, mientras el queso todavía se estira."
+      },
+      {
+        "id": "mesa",
+        "sobretitulo": "Y llega",
+        "titulo": "A tu mesa",
+        "texto": "Diecinueve pizzas, cinco tamaños. De una pequeña para dos a una extra de dieciséis porciones."
+      }
+    ]
+  },
+  "promesa": {
+    "sobretitulo": "Por qué sabe distinto",
+    "titulo": "La masa no se guarda de un día para otro.",
+    "texto": "Se amasa en el local cada mañana y se usa ese mismo día. Es la parte más aburrida del oficio y la única que no se puede saltar: una masa de ayer se nota en la primera mordida, por buenos que sean los ingredientes de encima.",
+    "cifras": [
+      { "id": "sabores", "numero": "19", "etiqueta": "sabores en la carta" },
+      { "id": "tamanos", "numero": "5", "etiqueta": "tamaños por pizza" },
+      { "id": "porciones", "numero": "16", "etiqueta": "porciones la más grande" }
+    ]
+  },
+  "casa": {
+    "sobretitulo": "La de la casa",
+    "titulo": "La Gordillo's",
+    "texto": "Seis cosas encima y ninguna de relleno: costilla de cerdo, carne mechada, pollo BBQ, tocineta, jamón y mozzarella. Es la que lleva el nombre del local, así que es la que no puede salir mal.",
+    "pizzaId": "gordillos"
+  },
+  "ubicacion": {
+    "sobretitulo": "Dónde estamos",
+    "titulo": "En San Ramón centro, contiguo a La Musi.",
+    "texto": "Desde el Hospital Carlos Luis Valverde Vega son 200 metros norte y 25 oeste. Pasás a recogerla o te la mandamos express."
+  }
+}

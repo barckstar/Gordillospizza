@@ -1,0 +1,56 @@
+{
+  "titulo": "Preguntas de siempre",
+  "texto": "Lo que más nos preguntan por WhatsApp, respondido acá para que no tengas que escribir.",
+  "preguntas": [
+    {
+      "id": "donde",
+      "pregunta": "¿Dónde queda Gordillo's Pizza?",
+      "respuesta": "En San Ramón centro, provincia de Alajuela: {{direccion}}. Está a 200 metros del hospital, así que desde el centro se llega caminando."
+    },
+    {
+      "id": "horario",
+      "pregunta": "¿Hasta qué hora abren?",
+      "respuesta": "Cerramos a las 9 p.m. todos los días. Para pedidos tarde conviene escribir al {{telefono}} antes de esa hora."
+    },
+    {
+      "id": "precio",
+      "pregunta": "¿Cuánto cuesta una pizza?",
+      "respuesta": "Desde {{precioMin}} la pequeña más sencilla hasta {{precioMax}} la Gordillo's extra de 16 porciones. Cada una de las {{pizzas}} pizzas tiene cinco precios, uno por tamaño."
+    },
+    {
+      "id": "tamanos",
+      "pregunta": "¿Qué tamaños de pizza hay?",
+      "respuesta": "Cinco: pequeña de 4 porciones, mediana de 6, intermedia de 8, grande de 12 y extra de 16. La pequeña alcanza para dos personas; la extra, para una fiesta."
+    },
+    {
+      "id": "entrega",
+      "pregunta": "¿Hacen entregas a domicilio en San Ramón?",
+      "respuesta": "Sí. Podés pasar a recogerla al local o pedirla express. El costo del express lo coordinás directamente con el mensajero, aparte del precio de la pizza."
+    },
+    {
+      "id": "pedir",
+      "pregunta": "¿Cómo hago un pedido?",
+      "respuesta": "Armás el pedido en esta misma página —elegís la pizza, el tamaño y la cantidad— y al terminar se abre WhatsApp con todo escrito. También podés escribir directo al {{telefono}}."
+    },
+    {
+      "id": "pago",
+      "pregunta": "¿Cómo se paga?",
+      "respuesta": "Efectivo o Sinpe Móvil."
+    },
+    {
+      "id": "gordillos",
+      "pregunta": "¿Qué lleva la pizza Gordillo's?",
+      "respuesta": "Es la de la casa: costilla de cerdo, carne mechada, pollo BBQ, tocineta, jamón y queso mozzarella. Seis ingredientes y ninguno de relleno."
+    },
+    {
+      "id": "vegetariana",
+      "pregunta": "¿Tienen pizza sin carne?",
+      "respuesta": "Sí, tres: la Vegetariana con cebolla, chile dulce, hongos y tomate; la Napolitana con tomate en rodajas, aceite de oliva y orégano; y la de Queso."
+    },
+    {
+      "id": "masa",
+      "pregunta": "¿La masa es congelada?",
+      "respuesta": "No. Se amasa en el local cada mañana y se usa ese mismo día. Nunca sale una masa de ayer."
+    }
+  ]
+}

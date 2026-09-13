@@ -1,0 +1,454 @@
+@import "tailwindcss";
+
+/* ============================================================
+   PALETA — reparto 70/30/10
+   ------------------------------------------------------------
+   70% dominante  negro real, fondos de pagina y de seccion
+   30% secundario carbon, tarjetas y superficies
+   10% acento     rojo y ambar, solo CTA, precios, badges y activo
+
+   El rojo NUNCA es fondo de seccion. Misma leccion que en
+   5ta Avenida: el fondo de una foto no es la identidad.
+
+   Contraste medido sobre --color-negro (#0A0807):
+     --color-rojo      #D0181F  3,65:1  -> DECORATIVO. Nunca texto
+                                           sobre negro. Como FONDO de
+                                           boton con texto blanco da
+                                           5,48:1 y si pasa AA.
+     --color-rojo-vivo #FF4A3D  5,99:1  -> AA, texto de acento
+     --color-ambar     #E8A33C  9,26:1  -> AA, precios
+     --color-crema     #F7E9CC  17,1:1  -> texto corrido
+     blanco            #FFFFFF  19,8:1
+   ============================================================ */
+
+@theme {
+  --color-negro: #0a0807;
+  --color-negro-2: #120d0b;
+  --color-carbon: #1c1310;
+  --color-carbon-2: #2a1a15;
+  --color-rojo: #d0181f;
+  --color-rojo-osc: #8e0f14;
+  --color-rojo-vivo: #ff4a3d;
+  --color-ambar: #e8a33c;
+  --color-crema: #f7e9cc;
+  --color-humo: #a2938a;
+
+  --font-display: var(--fuente-display), Georgia, serif;
+  --font-texto: var(--fuente-texto), system-ui, sans-serif;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+  /* El navbar mide 72px: que las anclas no queden debajo. */
+  scroll-padding-top: 5rem;
+  background-color: var(--color-negro);
+}
+
+body {
+  background-color: var(--color-negro);
+  color: var(--color-crema);
+  font-family: var(--font-texto);
+  -webkit-font-smoothing: antialiased;
+  /* Nada de desborde horizontal: costo un bug entero en 5ta Avenida. */
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.015em;
+}
+
+::selection {
+  background: var(--color-rojo);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ambar);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* El spec lo exige: prefers-reduced-motion detiene todo. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   HERO CON SCROLL-SCRUB
+   ------------------------------------------------------------
+   La seccion mide varias pantallas de alto; adentro, un bloque
+   `sticky` se queda quieto mientras el scroll avanza. Ese avance
+   es el que mueve el `currentTime` del video — ver HeroScroll.tsx.
+
+   El video se recodifico a TODO-KEYFRAMES (240/240). El original
+   de Veo traia UN solo keyframe en 240 frames: buscar un punto
+   intermedio obligaba al navegador a decodificar desde el
+   principio y el scrub temblaba entero.
+   ============================================================ */
+
+.hero-pista {
+  /* 340vh = 240 frames repartidos en 2,4 pantallas de scroll.
+     Menos que esto y el video pasa demasiado rapido para leerse. */
+  height: 340vh;
+  position: relative;
+}
+
+.hero-marco {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.hero-medio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+/* El poster es el elemento LCP. Se va cuando el video ya puede pintar. */
+.hero-poster {
+  z-index: 1;
+  transition: opacity 0.45s ease;
+}
+.hero-marco[data-video-listo="true"] .hero-poster {
+  opacity: 0;
+}
+
+/*
+  El video de Veo tiene la plaza llena de luces y gentio. Encima va el
+  titular. Sin este velo el texto no se lee — se midio con el frame 0.
+*/
+.hero-velo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(
+      to top,
+      var(--color-negro) 2%,
+      rgb(10 8 7 / 0.55) 32%,
+      rgb(10 8 7 / 0.12) 62%,
+      rgb(10 8 7 / 0.5) 100%
+    ),
+    radial-gradient(
+      120% 85% at 50% 55%,
+      transparent 35%,
+      rgb(10 8 7 / 0.7) 100%
+    );
+}
+
+.hero-capas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 5rem 1.25rem 7rem;
+  text-align: center;
+  /* El puntero tiene que llegar al video, no chocar con la capa. */
+  pointer-events: none;
+}
+.hero-capas a,
+.hero-capas button {
+  pointer-events: auto;
+}
+
+/*
+  Parallax de puntero — el "tic del mouse".
+  --px y --py los escribe HeroScroll.tsx entre -0.5 y 0.5.
+*/
+.hero-parallax {
+  transform: translate3d(
+    calc(var(--px, 0) * var(--fuerza, 18px)),
+    calc(var(--py, 0) * var(--fuerza, 18px)),
+    0
+  );
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/*
+  Cada bloque de texto vive en una franja del scroll. HeroScroll.tsx
+  escribe --t (0..1) y aqui se decide quien se ve.
+*/
+.hero-bloque {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hero-bloque[data-activo="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.hero-indicador {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 4;
+  width: min(280px, 60vw);
+  height: 2px;
+  background: rgb(247 233 204 / 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.hero-indicador::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: calc(var(--t, 0) * 100%);
+  background: var(--color-ambar);
+}
+
+/*
+  Sin JavaScript, o con movimiento reducido: la pista se encoge a una
+  pantalla y queda el poster con el titular. Nunca una pagina en blanco
+  esperando un scroll que no va a mover nada.
+*/
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .hero-pista {
+    height: 100svh;
+  }
+  .hero-bloque {
+    opacity: 0;
+    transform: none;
+  }
+  .hero-bloque[data-primero="true"] {
+    opacity: 1;
+  }
+  .hero-indicador {
+    display: none;
+  }
+  .hero-parallax {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   REVELADO AL ENTRAR EN PANTALLA — sin JavaScript de animacion
+   ------------------------------------------------------------
+   Heredado de 5ta Avenida, donde quitar Framer Motion bajo el
+   render delay del LCP de 4.401 ms. Los componentes Revelar son
+   de SERVIDOR: solo pintan clases. Un unico ObservadorRevelado
+   les pone data-visible. La animacion la hace CSS.
+   ============================================================ */
+
+.revelar {
+  --revelar-x: 0px;
+  --revelar-y: 0px;
+  --revelar-escala: 1;
+  --revelar-retraso: 0s;
+}
+
+.revelar-abajo {
+  --revelar-y: 28px;
+}
+.revelar-izquierda {
+  --revelar-x: -32px;
+}
+.revelar-derecha {
+  --revelar-x: 32px;
+}
+.revelar-escala {
+  --revelar-escala: 0.94;
+}
+
+/*
+  `scripting: enabled` es la clave de que esto sea seguro. El estado
+  oculto SOLO existe si hay JavaScript para revelarlo.
+*/
+@media (scripting: enabled) {
+  .revelar {
+    opacity: 0;
+    transform: translate3d(var(--revelar-x), var(--revelar-y), 0)
+      scale(var(--revelar-escala));
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso);
+  }
+
+  .revelar[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .revelar-item {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso);
+  }
+
+  .revelar-cascada[data-visible="true"] > .revelar-item {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revelar-entrada {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--revelar-x), var(--revelar-y), 0)
+      scale(var(--revelar-escala));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.revelar-inmediato {
+  animation: revelar-entrada 0.6s cubic-bezier(0.22, 1, 0.36, 1)
+    var(--revelar-retraso) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revelar,
+  .revelar-item,
+  .revelar-inmediato {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   MODALES — entrada y salida con zoom
+   ------------------------------------------------------------
+   La hoja de la pizza, el pedido y el checkout aparecian y
+   desaparecian de golpe. Ahora entran con un zoom corto y salen
+   con uno mas rapido: entrar puede darse el lujo de ser suave,
+   salir tiene que sentirse inmediato o parece que la interfaz
+   se trabo.
+
+   El cierre NO lo decide React de una: el componente se queda
+   montado con `data-saliendo="true"` y se desmonta cuando
+   termina la animacion (`animationend`). Sin eso solo se
+   animaria la entrada.
+
+   NO se apagan estas animaciones bajo `prefers-reduced-motion`
+   A PROPOSITO. La regla global de mas arriba ya las baja a
+   0,01 ms, y eso es lo que hay que hacer: si se pusiera
+   `animation: none` el evento `animationend` nunca se
+   dispararia y el modal NO SE PODRIA CERRAR.
+   ============================================================ */
+
+@keyframes modal-velo-entrar {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modal-velo-salir {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes modal-entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes modal-salir {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.93) translateY(18px);
+  }
+}
+
+.modal-velo {
+  animation: modal-velo-entrar 0.25s ease both;
+}
+.modal-panel {
+  animation: modal-entrar 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* El zoom crece desde el centro; en movil la hoja sube desde abajo. */
+  transform-origin: center bottom;
+}
+
+[data-saliendo="true"] .modal-velo {
+  animation: modal-velo-salir 0.19s ease both;
+}
+[data-saliendo="true"] .modal-panel {
+  animation: modal-salir 0.19s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+/* ============================================================
+   CUADRICULA DEL MENU — entrada escalonada
+   ------------------------------------------------------------
+   Reusa el mecanismo de `Revelar` (data-revelar + el observador
+   del layout) sin los componentes, porque aqui los hijos son
+   <li> y no divs.
+
+   El escalon se TOPA a los 8 primeros: con 19 pizzas y 0,05 s
+   cada una, la ultima entraria casi un segundo tarde y se veria
+   como que el sitio va lento, no como una animacion.
+   ============================================================ */
+
+.menu-cascada > li {
+  --revelar-retraso: 0s;
+}
+
+@media (scripting: enabled) {
+  .menu-cascada > li {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.97);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--revelar-retraso);
+  }
+
+  .menu-cascada[data-visible="true"] > li {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-cascada > li {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

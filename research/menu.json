@@ -1,0 +1,41 @@
+{
+  "fuente": "Arte oficial del menu enviado por el cliente, 2026-09-12",
+  "moneda": "CRC",
+  "tamanos": [
+    { "id": "peq", "nombre": "Pequeña", "porciones": 4 },
+    { "id": "med", "nombre": "Mediana", "porciones": 6 },
+    { "id": "inter", "nombre": "Intermedia", "porciones": 8 },
+    { "id": "grd", "nombre": "Grande", "porciones": 12 },
+    { "id": "extra", "nombre": "Extra", "porciones": 16 }
+  ],
+  "extras": [
+    { "id": "borde-queso", "nombre": "Borde de queso", "precio": 2000 }
+  ],
+  "pizzas": [
+    { "id": "gordillos", "nombre": "Gordillos", "ingredientes": ["Costilla de cerdo", "Carne mechada", "Pollo BBQ", "Tocineta", "Jamón", "Queso mozzarella"], "precios": { "peq": 6000, "med": 8000, "inter": 11000, "grd": 14000, "extra": 16000 } },
+    { "id": "suprema", "nombre": "Suprema", "ingredientes": ["Jamón", "Salami", "Carne molida", "Chile dulce", "Cebolla", "Hongos"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "jamon-queso", "nombre": "Jamón y Queso", "ingredientes": ["Jamón", "Queso mozzarella"], "precios": { "peq": 3500, "med": 5200, "inter": 7100, "grd": 9450, "extra": 10850 } },
+    { "id": "latina", "nombre": "Latina", "ingredientes": ["Jamón", "Salami", "Carne molida"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "napolitana", "nombre": "Napolitana", "ingredientes": ["Tomate en rodajas", "Aceite de oliva", "Orégano"], "precios": { "peq": 3500, "med": 5200, "inter": 7100, "grd": 9450, "extra": 10300 } },
+    { "id": "jamon-hongos", "nombre": "Jamón y Hongos", "ingredientes": ["Jamón", "Hongos"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "pepperoni", "nombre": "Pepperoni", "ingredientes": ["Pepperoni"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "queso", "nombre": "Queso", "ingredientes": ["Queso mozzarella"], "precios": { "peq": 3300, "med": 4900, "inter": 6700, "grd": 8950, "extra": 10300 } },
+    { "id": "vegetariana", "nombre": "Vegetariana", "ingredientes": ["Cebolla", "Chile dulce", "Hongos", "Tomate en rodajas"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "canadiense", "nombre": "Canadiense", "ingredientes": ["Chile dulce", "Cebolla", "Tocineta"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "hawaiana", "nombre": "Hawaiana", "ingredientes": ["Jamón", "Coco", "Piña"], "precios": { "peq": 3600, "med": 5400, "inter": 7500, "grd": 9700, "extra": 11100 } },
+    { "id": "pollo", "nombre": "Pollo", "ingredientes": ["Trocitos de pollo", "Cebolla", "Chile dulce"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "brasilena", "nombre": "Brasileña", "ingredientes": ["Jamón", "Carne molida", "Tomate", "Pimienta", "Limón"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "mexicana", "nombre": "Mexicana", "ingredientes": ["Frijoles molidos", "Chile dulce", "Chile jalapeño", "Cebolla", "Tomate"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "atun", "nombre": "Atún", "ingredientes": ["Atún", "Chile dulce", "Cebolla"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "italiana", "nombre": "Italiana", "ingredientes": ["Aceitunas verdes", "Aceitunas negras", "Pepperoni", "Ajo", "Albahaca", "Orégano", "Tomate en rodajas"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "camarones", "nombre": "Camarones", "ingredientes": ["Camarón", "Cebolla", "Ajo", "Albahaca"], "precios": { "peq": 5000, "med": 7000, "inter": 10000, "grd": 13000, "extra": 15000 } },
+    { "id": "carne-mechada", "nombre": "Carne Mechada", "ingredientes": ["Carne mechada", "Chile dulce", "Cebolla"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } },
+    { "id": "bbq", "nombre": "BBQ", "ingredientes": ["Pollo", "Cebolla", "Salsa BBQ"], "precios": { "peq": 3700, "med": 5500, "inter": 7700, "grd": 10000, "extra": 11450 } }
+  ],
+  "pendiente_del_cliente": [
+    "Bebidas con precios — el arte del menu no lista ninguna",
+    "Entradas, acompañamientos y postres, si existen",
+    "Confirmar ingredientes de Jamón y Queso, Jamón y Hongos, Pepperoni y Queso (el arte no los detalla; los de aquí están inferidos)",
+    "Confirmar si la promo MIÉRCOLES 2 POR ₡9.900 sigue vigente y a qué tamaño aplica"
+  ]
+}

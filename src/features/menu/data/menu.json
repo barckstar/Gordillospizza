@@ -1,0 +1,413 @@
+{
+  "fuente": "Arte oficial del menu enviado por el cliente, 2026-09-12",
+  "moneda": "CRC",
+  "tamanos": [
+    {
+      "id": "peq",
+      "nombre": "Pequeña",
+      "porciones": 4
+    },
+    {
+      "id": "med",
+      "nombre": "Mediana",
+      "porciones": 6
+    },
+    {
+      "id": "inter",
+      "nombre": "Intermedia",
+      "porciones": 8
+    },
+    {
+      "id": "grd",
+      "nombre": "Grande",
+      "porciones": 12
+    },
+    {
+      "id": "extra",
+      "nombre": "Extra",
+      "porciones": 16
+    }
+  ],
+  "pizzas": [
+    {
+      "id": "gordillos",
+      "nombre": "Gordillos",
+      "ingredientes": [
+        "Costilla de cerdo",
+        "Carne mechada",
+        "Pollo BBQ",
+        "Tocineta",
+        "Jamón",
+        "Queso mozzarella"
+      ],
+      "precios": {
+        "peq": 6000,
+        "med": 8000,
+        "inter": 11000,
+        "grd": 14000,
+        "extra": 16000
+      },
+      "imagen": "/pizzas/gordillos.webp"
+    },
+    {
+      "id": "suprema",
+      "nombre": "Suprema",
+      "ingredientes": [
+        "Jamón",
+        "Salami",
+        "Carne molida",
+        "Chile dulce",
+        "Cebolla",
+        "Hongos"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/suprema.webp"
+    },
+    {
+      "id": "jamon-queso",
+      "nombre": "Jamón y Queso",
+      "ingredientes": [
+        "Jamón",
+        "Queso mozzarella"
+      ],
+      "precios": {
+        "peq": 3500,
+        "med": 5200,
+        "inter": 7100,
+        "grd": 9450,
+        "extra": 10850
+      },
+      "imagen": "/pizzas/jamon-queso.webp"
+    },
+    {
+      "id": "latina",
+      "nombre": "Latina",
+      "ingredientes": [
+        "Jamón",
+        "Salami",
+        "Carne molida"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/latina.webp"
+    },
+    {
+      "id": "napolitana",
+      "nombre": "Napolitana",
+      "ingredientes": [
+        "Tomate en rodajas",
+        "Aceite de oliva",
+        "Orégano"
+      ],
+      "precios": {
+        "peq": 3500,
+        "med": 5200,
+        "inter": 7100,
+        "grd": 9450,
+        "extra": 10300
+      },
+      "imagen": "/pizzas/napolitana.webp"
+    },
+    {
+      "id": "jamon-hongos",
+      "nombre": "Jamón y Hongos",
+      "ingredientes": [
+        "Jamón",
+        "Hongos"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/jamon-hongos.webp"
+    },
+    {
+      "id": "pepperoni",
+      "nombre": "Pepperoni",
+      "ingredientes": [
+        "Pepperoni"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/pepperoni.webp"
+    },
+    {
+      "id": "queso",
+      "nombre": "Queso",
+      "ingredientes": [
+        "Queso mozzarella"
+      ],
+      "precios": {
+        "peq": 3300,
+        "med": 4900,
+        "inter": 6700,
+        "grd": 8950,
+        "extra": 10300
+      },
+      "imagen": "/pizzas/queso.webp"
+    },
+    {
+      "id": "vegetariana",
+      "nombre": "Vegetariana",
+      "ingredientes": [
+        "Cebolla",
+        "Chile dulce",
+        "Hongos",
+        "Tomate en rodajas"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/vegetariana.webp"
+    },
+    {
+      "id": "canadiense",
+      "nombre": "Canadiense",
+      "ingredientes": [
+        "Chile dulce",
+        "Cebolla",
+        "Tocineta"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/canadiense.webp"
+    },
+    {
+      "id": "hawaiana",
+      "nombre": "Hawaiana",
+      "ingredientes": [
+        "Jamón",
+        "Coco",
+        "Piña"
+      ],
+      "precios": {
+        "peq": 3600,
+        "med": 5400,
+        "inter": 7500,
+        "grd": 9700,
+        "extra": 11100
+      },
+      "imagen": "/pizzas/hawaiana.webp"
+    },
+    {
+      "id": "pollo",
+      "nombre": "Pollo",
+      "ingredientes": [
+        "Trocitos de pollo",
+        "Cebolla",
+        "Chile dulce"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/pollo.webp"
+    },
+    {
+      "id": "brasilena",
+      "nombre": "Brasileña",
+      "ingredientes": [
+        "Jamón",
+        "Carne molida",
+        "Tomate",
+        "Pimienta",
+        "Limón"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/brasilena.webp"
+    },
+    {
+      "id": "mexicana",
+      "nombre": "Mexicana",
+      "ingredientes": [
+        "Frijoles molidos",
+        "Chile dulce",
+        "Chile jalapeño",
+        "Cebolla",
+        "Tomate"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/mexicana.webp"
+    },
+    {
+      "id": "atun",
+      "nombre": "Atún",
+      "ingredientes": [
+        "Atún",
+        "Chile dulce",
+        "Cebolla"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/atun.webp"
+    },
+    {
+      "id": "italiana",
+      "nombre": "Italiana",
+      "ingredientes": [
+        "Aceitunas verdes",
+        "Aceitunas negras",
+        "Pepperoni",
+        "Ajo",
+        "Albahaca",
+        "Orégano",
+        "Tomate en rodajas"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/italiana.webp"
+    },
+    {
+      "id": "camarones",
+      "nombre": "Camarones",
+      "ingredientes": [
+        "Camarón",
+        "Cebolla",
+        "Ajo",
+        "Albahaca"
+      ],
+      "precios": {
+        "peq": 5000,
+        "med": 7000,
+        "inter": 10000,
+        "grd": 13000,
+        "extra": 15000
+      },
+      "imagen": "/pizzas/camarones.webp"
+    },
+    {
+      "id": "carne-mechada",
+      "nombre": "Carne Mechada",
+      "ingredientes": [
+        "Carne mechada",
+        "Chile dulce",
+        "Cebolla"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/carne-mechada.webp"
+    },
+    {
+      "id": "bbq",
+      "nombre": "BBQ",
+      "ingredientes": [
+        "Pollo",
+        "Cebolla",
+        "Salsa BBQ"
+      ],
+      "precios": {
+        "peq": 3700,
+        "med": 5500,
+        "inter": 7700,
+        "grd": 10000,
+        "extra": 11450
+      },
+      "imagen": "/pizzas/bbq.webp"
+    }
+  ],
+  "adicionales": [
+    {
+      "id": "borde-queso",
+      "nombre": "Borde de queso",
+      "detalle": "Para cualquier tamaño",
+      "precio": 2000,
+      "imagen": null
+    }
+  ],
+  "bebidas": [
+    {
+      "id": "coca-cola",
+      "nombre": "Coca-Cola",
+      "detalle": "Sabor original · 600 ml",
+      "precio": null,
+      "imagen": "/bebidas/coca-cola.webp"
+    },
+    {
+      "id": "fanta",
+      "nombre": "Fanta",
+      "detalle": "Naranja · 600 ml",
+      "precio": null,
+      "imagen": "/bebidas/fanta.webp"
+    },
+    {
+      "id": "fresca",
+      "nombre": "Fresca",
+      "detalle": "Toronja · 600 ml",
+      "precio": null,
+      "imagen": "/bebidas/fresca.webp"
+    },
+    {
+      "id": "canada-dry",
+      "nombre": "Canada Dry",
+      "detalle": "Ginger ale · 600 ml",
+      "precio": null,
+      "imagen": "/bebidas/canada-dry.webp"
+    }
+  ],
+  "pendiente_del_cliente": [
+    "PRECIOS DE LAS BEBIDAS — hoy salen como 'por confirmar' y no se pueden agregar al pedido",
+    "Fotos reales de las pizzas — las de /pizzas/ son de Pexels, provisionales",
+    "Entradas y postres, si existen",
+    "Confirmar ingredientes de Jamon y Queso, Jamon y Hongos, Pepperoni y Queso (inferidos)",
+    "Confirmar si la promo MIERCOLES 2 POR 9.900 sigue vigente y a que tamaño aplica",
+    "Metodos de pago que aceptan"
+  ]
+}
