@@ -14,9 +14,9 @@ import { LANDING } from "../data/landing";
   POR QUE EL VIDEO ESTA RECODIFICADO
   El mp4 que salio de Veo traia UN keyframe en 240 frames (medido con
   ffprobe). Para pintar el frame 137 el navegador tenia que decodificar
-  desde el 0: el scrub temblaba entero. El de `public/hero/` tiene
-  240/240 keyframes, asi que cualquier punto se pinta al instante.
-  Cuesta 4,3 MB en vez de 4,8 MB — sale mas barato Y funciona.
+  desde el 0: el scrub temblaba entero. Los de `public/hero/` tienen
+  240/240 keyframes, asi que cualquier punto se pinta al instante. Eso es
+  lo que cuesta el peso: todo-keyframes no comprime entre frames.
 
   POR QUE EL VIDEO NO ES EL LCP
   El elemento que Lighthouse mide es el <img> del poster: 92 KB en AVIF,
@@ -83,8 +83,26 @@ export function HeroScroll() {
     /* ---------- carga diferida del video ---------- */
     const cargarVideo = () => {
       if (cancelado) return;
-      const angosto = window.matchMedia("(max-width: 640px)").matches;
-      video.src = angosto ? "/hero/chef-640.mp4" : "/hero/chef-960.mp4";
+      /*
+        DOS ESCALONES, y el corte esta en 768 px.
+
+        La version anterior servia 960 en escritorio mientras el poster era de
+        1280: se veia un poster nitido y, al arrancar el video, la calidad
+        BAJABA. En un monitor de 1920 ese 960 se estira al doble.
+
+        Medido con SSIM contra el original de Veo:
+          960 CRF28 (lo que habia)  4,1 MB  0,912
+          720 CRF25                 3,6 MB  0,902  <- peor: la resolucion
+                                                      pesa mas que el CRF
+          1280 CRF27                6,4 MB  0,942
+          1280 CRF26 (escritorio)   7,1 MB  0,948
+          960  CRF25 (movil)        5,3 MB  0,932
+
+        El peso extra no toca el LCP: el video no se descarga hasta despues
+        del evento `load`, y con movimiento reducido no se descarga nunca.
+      */
+      const angosto = window.matchMedia("(max-width: 768px)").matches;
+      video.src = angosto ? "/hero/chef-960.mp4" : "/hero/chef-1280.mp4";
       video.load();
     };
 

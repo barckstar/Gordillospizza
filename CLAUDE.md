@@ -202,8 +202,24 @@ se llama a `onCerrar`. Sin eso solo se animaria la entrada.
   obligaba a decodificar desde el principio: el scrub temblaba entero. Recodificado a
   **240/240 keyframes** pesa 4,3 MB en vez de 4,8 MB — más barato Y funciona.
 - Se midieron cuatro técnicas: secuencia WebP de 120 frames (5,8 MB), de 80 frames
-  (3,9 MB), **mp4 todo-keyframes 960px (4,1 MB, 240 frames)** y VP9 todo-keyframes
-  (22 MB). Ganó el mp4.
+  (3,9 MB), **mp4 todo-keyframes (240 frames)** y VP9 todo-keyframes (22 MB).
+  Ganó el mp4.
+- **La primera version se sirvio a 960 y fue un error**: el poster es de 1280, asi
+  que se veia un poster nitido y al arrancar el video la calidad BAJABA. En un
+  monitor de 1920 ese 960 se estiraba al doble. Medido con SSIM contra el original:
+
+  | version | peso | SSIM |
+  |---|---|---|
+  | 960 CRF28 (la que habia) | 4,1 MB | 0,912 |
+  | 720 CRF25 | 3,6 MB | **0,902** |
+  | 960 CRF25 (movil, hoy) | 5,3 MB | 0,932 |
+  | 1280 CRF27 | 6,4 MB | 0,942 |
+  | **1280 CRF26 (escritorio, hoy)** | **7,1 MB** | **0,948** |
+
+  El dato que no se esperaba: **720 sale PEOR que 960 aunque tenga mejor CRF**.
+  En este material la resolucion pesa mas que la compresion, asi que bajar de
+  960 no compensa nunca.
+- El corte entre las dos versiones esta en **768 px**, no en 640.
 - **El LCP es el poster** (`poster.avif`, 92 KB, `fetchPriority="high"`). El video no
   se descarga hasta después del evento `load`.
 - **Nunca dejar que el scrub llegue a `duration` exacto**: el `<video>` marca
