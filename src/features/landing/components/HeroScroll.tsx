@@ -136,7 +136,18 @@ export function HeroScroll() {
 
     const progreso = () => {
       const rect = pista.getBoundingClientRect();
-      const recorrido = rect.height - window.innerHeight;
+      /*
+        El recorrido se mide contra la ALTURA DEL PROPIO MARCO, no contra
+        `window.innerHeight`.
+
+        En el telefono `innerHeight` cambia mientras la barra del navegador
+        se esconde y reaparece con el scroll. Si el divisor cambia a mitad
+        del gesto, el mismo punto de scroll da un progreso distinto y el
+        video pega un salto — justo mientras la persona esta desplazandose.
+        El marco es un elemento del DOM: mide lo que mide, pase lo que pase
+        con la barra.
+      */
+      const recorrido = rect.height - marco.offsetHeight;
       if (recorrido <= 0) return 0;
       const avance = -rect.top / recorrido;
       return Math.min(1, Math.max(0, avance));

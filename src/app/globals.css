@@ -104,9 +104,20 @@ h3 {
    ============================================================ */
 
 .hero-pista {
-  /* 340vh = 240 frames repartidos en 2,4 pantallas de scroll.
-     Menos que esto y el video pasa demasiado rapido para leerse. */
-  height: 340vh;
+  /*
+    340svh = 240 frames repartidos en 2,4 pantallas de scroll. Menos que esto
+    y el video pasa demasiado rapido para leerse.
+
+    `svh` Y NO `vh`, para que coincida con el `100svh` del marco de abajo.
+    Mezclarlas rompe en el telefono: `vh` es la altura CON la barra del
+    navegador escondida y `svh` con ella a la vista, asi que la pista y el
+    bloque pegajoso median contra reglas distintas y el video se
+    desincronizaba del dedo cada vez que la barra aparecia o desaparecia.
+
+    Tampoco `dvh`: esa cambia continuamente durante el scroll y haria que la
+    propia pista se encogiera y estirara bajo los pies del usuario.
+  */
+  height: 340svh;
   position: relative;
 }
 
@@ -309,6 +320,28 @@ h3 {
   .revelar-cascada[data-visible="true"] > .revelar-item {
     opacity: 1;
     transform: none;
+  }
+}
+
+/*
+  EN MOVIL EL REVELADO NO SE DESPLAZA DE LADO.
+
+  `revelar-izquierda` y `revelar-derecha` mueven el elemento 32 px en
+  horizontal ANTES de revelarlo. En escritorio sobra espacio y se lee como un
+  deslizamiento; a 375 px ese desplazamiento se sale del ancho y el documento
+  pasa a medir 388 px: aparece scroll horizontal en toda la pagina.
+
+  Medido: 388 px de documento en un viewport de 375.
+
+  No se tapa con `overflow`, se quita: en un telefono no hay margen para
+  percibir un deslizamiento lateral, asi que el efecto no aportaba nada y
+  solo costaba. La entrada vertical se queda.
+*/
+@media (max-width: 640px) {
+  .revelar-izquierda,
+  .revelar-derecha {
+    --revelar-x: 0px;
+    --revelar-y: 24px;
   }
 }
 

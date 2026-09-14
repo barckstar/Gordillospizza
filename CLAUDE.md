@@ -159,6 +159,35 @@ Las etiquetas del lector de pantalla van aparte del texto que se ve: la
 plantilla "<nombre> de Gordillo's Pizza" dejaba "Como llegar de Gordillo's
 Pizza", que dicho en voz alta no se entiende.
 
+## Dos bugs de movil que costaron caro
+
+**1. El sitio quedaba sin scroll despues de pedir.** Cada modal guardaba el
+`overflow` del body que encontro y lo restauraba al cerrarse. Con UN modal
+funciona; aca se solapan siempre:
+
+    hoja de pizza abierta -> overflow: hidden, guarda ""
+    se toca "Agregar" -> la hoja SALE (sigue montada 190 ms) y el pedido ABRE
+    el pedido monta, lee "hidden" y se lo guarda como "lo de antes"
+    se cierra el pedido -> restaura "hidden"  -> BODY BLOQUEADO PARA SIEMPRE
+
+En movil la persona no podia seguir desplazandose y solo recuperaba el sitio
+recargando. Ahora el bloqueo es del DOCUMENTO, con una CUENTA de modales
+abiertos: el primero bloquea, el ultimo libera. Ver `shared/lib/modal.ts`.
+
+**2. Desborde horizontal de 13 px.** `revelar-izquierda` y `revelar-derecha`
+desplazan 32 px en horizontal ANTES de revelar. A 375 px eso sacaba el
+documento a 388 px y aparecia scroll lateral en toda la pagina. Por debajo de
+640 px el desplazamiento lateral se anula: en un telefono no hay margen para
+percibirlo, asi que no aportaba nada y solo costaba.
+
+**Y una incoherencia de unidades en el hero.** La pista media `340vh` y el
+marco `100svh`, y el progreso se calculaba contra `window.innerHeight`. En el
+telefono las tres cosas difieren y ninguna es estable: `innerHeight` cambia
+mientras la barra del navegador se esconde con el scroll, asi que el divisor
+cambiaba a mitad del gesto y el video pegaba saltos. Ahora la pista va en
+`svh` como el marco, y el progreso se mide contra `marco.offsetHeight`, que
+es un elemento del DOM y no depende de la barra.
+
 ## Animaciones de los modales
 
 La hoja de la pizza, el pedido y el checkout **entran y salen con zoom**. El
