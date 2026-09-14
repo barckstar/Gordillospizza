@@ -38,11 +38,36 @@ const SUAVIZADO_60HZ = 0.12;
 /** Por debajo de esto no vale la pena pedir un seek. */
 const TOLERANCIA_S = 0.015;
 /**
- * Salto a partir del cual no se suaviza, se corta seco. Pasa al recargar la
- * pagina a media pista, o al volver de un ancla con el navegador restaurando
- * el scroll: suavizar un salto de ocho segundos es ver el video correr solo.
+ * VELOCIDAD MAXIMA a la que el video puede avanzar, en multiplos de su
+ * velocidad natural. ESTO ES LO QUE HACE QUE SE VEA COMO REPRODUCCION Y NO
+ * COMO SALTO.
+ *
+ * El problema: un tick de rueda mueve de golpe unos 100 px de scroll. Atado
+ * punto por punto, eso son ~12 frames de video recorridos en un instante —
+ * y 12 frames en un parpadeo el ojo no los lee como movimiento, los lee como
+ * un corte. No faltaban frames: sobraba velocidad.
+ *
+ * Con este tope, un tick ya no salta: el video SE REPRODUCE hasta el punto
+ * nuevo a una velocidad que el ojo sigue, y se detiene ahi. Si la persona
+ * scrollea muy rapido el video se queda atras un momento y se pone al dia —
+ * que llegue tarde es tolerable; que se vea cortado, no.
+ *
+ * 1,6x es el maximo que todavia se lee como reproduccion. Por encima vuelve
+ * a sentirse acelerado.
  */
-const SALTO_SECO_S = 1.5;
+const VELOCIDAD_MAXIMA = 1.6;
+/**
+ * Salto a partir del cual no se suaviza, se corta seco.
+ *
+ * Solo para teletransportes de verdad: recargar la pagina a media pista, o
+ * volver de un ancla con el navegador restaurando el scroll. Tres segundos
+ * son casi un tercio del video — mas que eso, esperar a que se reproduzca
+ * seria ver la pelicula entera.
+ *
+ * Antes eran 1,5 s y se comia el efecto: con el tope de velocidad, cerrar un
+ * hueco de 1,5 s es justo lo que queremos que se vea reproduciendose.
+ */
+const SALTO_SECO_S = 3;
 /**
  * Colchon contra el final del video. MEDIDO, no por si acaso.
  *
@@ -264,7 +289,24 @@ export function HeroScroll() {
           const k = movimientoReducido
             ? 1
             : 1 - Math.pow(1 - SUAVIZADO_60HZ, dt * 60);
-          tiempoSuave += (objetivo - tiempoSuave) * k;
+          let paso = (objetivo - tiempoSuave) * k;
+
+          /*
+            EL TOPE DE VELOCIDAD. `dt` son segundos reales, asi que
+            `VELOCIDAD_MAXIMA * dt` es cuanto video puede avanzar en este
+            frame sin pasarse. Se aplica en los dos sentidos: subir y bajar
+            se ven igual de fluidos.
+
+            No se aplica con movimiento reducido: ahi la persona pidio
+            explicitamente que nada se mueva por su cuenta, y este tope es
+            justo eso — movimiento que sigue despues de soltar.
+          */
+          if (!movimientoReducido && dt > 0) {
+            const maximo = VELOCIDAD_MAXIMA * dt;
+            if (Math.abs(paso) > maximo) paso = Math.sign(paso) * maximo;
+          }
+
+          tiempoSuave += paso;
         }
 
         if (

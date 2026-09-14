@@ -296,6 +296,35 @@ Dos resultados que no se esperaban:
 sin mirar el peso. 14,7 MB + 10,3 MB. **Hay que revisarlo antes del final** —
 CRF26 baja a 7,1 MB perdiendo 0,03 de SSIM.
 
+## Por que el scrub se veia "cortado" — y no era falta de frames
+
+Atado punto por punto al scroll, un tick de rueda (~100 px) recorre de golpe
+medio segundo de video. Simulando el bucle frame a frame a 60 Hz:
+
+| gesto | antes | ahora |
+|---|---|---|
+| un tick de rueda | **7,88x** la velocidad natural | 1,60x |
+| un golpe de scroll fuerte | **20,88x** | 1,60x |
+
+A 7,88x el primer frame del bucle avanzaba 0,131 s de video: unos **3 frames
+del clip dentro de un solo frame de pantalla**. A 20,88x eran 20. Eso el ojo
+no lo lee como movimiento, lo lee como un corte. **No faltaban frames:
+sobraba velocidad.**
+
+`VELOCIDAD_MAXIMA = 1.6` topa cuanto puede avanzar el video por segundo real.
+Con eso un tick ya no salta: el video SE REPRODUCE hasta el punto nuevo y se
+detiene ahi. Si la persona scrollea muy rapido el video se queda atras un
+momento y se pone al dia — que llegue tarde es tolerable; que se vea cortado,
+no.
+
+Por encima de 1,6x vuelve a sentirse acelerado. Es la perilla a tocar si el
+cliente lo quiere mas pegado al dedo (subir) o mas cinematografico (bajar).
+
+`SALTO_SECO_S` subio de 1,5 a 3 s: con el tope de velocidad, cerrar un hueco
+de 1,5 s es justo lo que queremos que se vea reproduciendose. El corte seco
+queda solo para teletransportes de verdad — recargar a media pista, o volver
+de un ancla con el scroll restaurado.
+
 ## El hero — decisiones medidas, no supuestas
 
 - **El mp4 de Veo traía 1 keyframe en 240** (ffprobe). Buscar un punto intermedio
