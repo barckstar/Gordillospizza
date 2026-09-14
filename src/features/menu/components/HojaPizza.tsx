@@ -12,9 +12,12 @@ import { useModal } from "@/shared/lib/modal";
  * La hoja donde se arma la pizza.
  *
  * Es EL paso del pedido: la tarjeta solo muestra el "desde", acá se elige el
- * tamaño y con eso queda fijado el precio. Sale como hoja desde abajo porque
- * en el teléfono —que es donde se pide comida— el pulgar llega al borde
- * inferior y no al centro de la pantalla.
+ * tamaño y con eso queda fijado el precio.
+ *
+ * EN MÓVIL OCUPA LA PANTALLA ENTERA. Antes era una hoja pegada abajo con un
+ * tope de 92svh, y ese 8% sobrante era una franja negra inútil arriba que
+ * además dejaba el quinto tamaño cortado desde el primer momento. A partir de
+ * `sm` vuelve a ser una tarjeta centrada, que es donde sí tiene sentido.
  */
 /*
   SE REMONTA POR PIZZA, no se resetea.
@@ -78,7 +81,7 @@ export function HojaPizza({
   return (
     <div
       data-saliendo={saliendo}
-      className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center"
+      className="fixed inset-0 z-[70] flex items-stretch justify-center sm:items-center"
     >
       <button
         type="button"
@@ -92,7 +95,7 @@ export function HojaPizza({
         aria-modal="true"
         aria-labelledby="hoja-pizza-titulo"
         onAnimationEnd={alTerminarAnimacion}
-        className="modal-panel relative max-h-[92svh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-crema/10 bg-negro-2 sm:rounded-3xl"
+        className="modal-panel relative w-full overflow-y-auto bg-negro-2 sm:max-h-[92svh] sm:max-w-lg sm:rounded-3xl sm:border sm:border-crema/10"
       >
         <div className="relative aspect-[16/10] w-full">
           <Image

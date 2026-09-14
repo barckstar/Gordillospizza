@@ -27,7 +27,7 @@ function Panel({ onIrAlCheckout }: { onIrAlCheckout: () => void }) {
   return (
     <div
       data-saliendo={saliendo}
-      className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center"
+      className="fixed inset-0 z-[80] flex items-stretch justify-center sm:items-center"
     >
       <button
         type="button"
@@ -41,7 +41,7 @@ function Panel({ onIrAlCheckout }: { onIrAlCheckout: () => void }) {
         aria-modal="true"
         aria-labelledby="pedido-titulo"
         onAnimationEnd={alTerminarAnimacion}
-        className="modal-panel relative flex max-h-[92svh] w-full max-w-lg flex-col rounded-t-3xl border border-crema/10 bg-negro-2 sm:rounded-3xl"
+        className="modal-panel relative flex w-full flex-col bg-negro-2 sm:h-auto sm:max-h-[92svh] sm:max-w-lg sm:rounded-3xl sm:border sm:border-crema/10"
       >
         <header className="flex items-center justify-between border-b border-crema/10 px-5 py-4">
           <h2

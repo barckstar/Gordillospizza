@@ -63,7 +63,7 @@ export function CheckoutDrawer({ onCerrar }: { onCerrar: () => void }) {
   return (
     <div
       data-saliendo={saliendo}
-      className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center"
+      className="fixed inset-0 z-[90] flex items-stretch justify-center sm:items-center"
     >
       <button
         type="button"
@@ -77,7 +77,7 @@ export function CheckoutDrawer({ onCerrar }: { onCerrar: () => void }) {
         aria-modal="true"
         aria-labelledby="checkout-titulo"
         onAnimationEnd={alTerminarAnimacion}
-        className="modal-panel relative max-h-[92svh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-crema/10 bg-negro-2 sm:rounded-3xl"
+        className="modal-panel relative w-full overflow-y-auto bg-negro-2 sm:max-h-[92svh] sm:max-w-lg sm:rounded-3xl sm:border sm:border-crema/10"
       >
         <header className="flex items-center justify-between border-b border-crema/10 px-5 py-4">
           <h2

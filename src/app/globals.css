@@ -410,10 +410,37 @@ h3 {
     opacity: 0;
   }
 }
+/*
+  La intensidad del zoom sale de variables porque NO puede ser la misma en
+  los dos tamaños.
+
+  En escritorio el modal es una tarjeta centrada: encogerla al 90% se lee como
+  que entra desde el fondo. En movil ocupa la pantalla ENTERA, y encoger la
+  pantalla entera al 90% deja ver el velo por los cuatro bordes — parece que
+  la interfaz se despega. Alli el gesto tiene que ser mucho mas contenido.
+*/
+.modal-panel {
+  --modal-escala: 0.9;
+  --modal-desliz: 26px;
+  --modal-escala-salida: 0.93;
+  --modal-desliz-salida: 18px;
+}
+
+@media (max-width: 639px) {
+  .modal-panel {
+    --modal-escala: 0.97;
+    --modal-desliz: 20px;
+    --modal-escala-salida: 0.985;
+    --modal-desliz-salida: 14px;
+    /* A pantalla completa el zoom nace del centro, no del borde inferior. */
+    transform-origin: center;
+  }
+}
+
 @keyframes modal-entrar {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(26px);
+    transform: scale(var(--modal-escala)) translateY(var(--modal-desliz));
   }
   to {
     opacity: 1;
@@ -427,7 +454,8 @@ h3 {
   }
   to {
     opacity: 0;
-    transform: scale(0.93) translateY(18px);
+    transform: scale(var(--modal-escala-salida))
+      translateY(var(--modal-desliz-salida));
   }
 }
 

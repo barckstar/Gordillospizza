@@ -188,6 +188,27 @@ cambiaba a mitad del gesto y el video pegaba saltos. Ahora la pista va en
 `svh` como el marco, y el progreso se mide contra `marco.offsetHeight`, que
 es un elemento del DOM y no depende de la barra.
 
+## Los modales en movil van a PANTALLA COMPLETA
+
+Antes eran hojas pegadas abajo con tope de `92svh`. Ese 8% sobrante no era
+aire de diseño: era una franja negra inutil arriba que ademas dejaba el quinto
+tamaño de pizza ("Extra") cortado desde el primer momento, obligando a
+desplazarse antes de poder elegir.
+
+Ahora, por debajo de `sm`, el panel va de borde a borde: `items-stretch`, sin
+esquinas redondeadas y sin borde. **Los cinco tamaños entran sin scroll** a
+375x812 (medido: contenido 812, visible 812). En el pedido, ademas, el pie
+queda pegado al fondo, o sea "Hacer pedido" justo bajo el pulgar.
+
+A partir de `sm` vuelve a ser la tarjeta centrada de siempre: 512 px, esquinas
+de 24 px y borde. Ahi el modal a pantalla completa no tendria sentido.
+
+**La animacion tuvo que cambiar con esto.** El zoom entraba desde una escala
+de 0,9: en una tarjeta centrada se lee como que viene desde el fondo, pero
+encoger la PANTALLA ENTERA al 90% deja ver el velo por los cuatro bordes y
+parece que la interfaz se despega. Por eso la intensidad sale de variables
+CSS y en movil es mucho mas contenida (0,97), con el origen en el centro.
+
 ## Animaciones de los modales
 
 La hoja de la pizza, el pedido y el checkout **entran y salen con zoom**. El
