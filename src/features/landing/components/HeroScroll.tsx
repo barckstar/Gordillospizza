@@ -325,9 +325,9 @@ export function HeroScroll() {
 
           /*
             EL TOPE DE VELOCIDAD. `dt` son segundos reales, asi que
-            `VELOCIDAD_MAXIMA * dt` es cuanto video puede avanzar en este
-            frame sin pasarse. Se aplica en los dos sentidos: subir y bajar
-            se ven igual de fluidos.
+            `permitida * dt` es cuanto video puede avanzar en este frame sin
+            pasarse. Se aplica en los dos sentidos: subir y bajar se ven
+            igual de fluidos.
 
             No se aplica con movimiento reducido: ahi la persona pidio
             explicitamente que nada se mueva por su cuenta, y este tope es
