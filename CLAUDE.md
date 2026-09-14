@@ -246,6 +246,37 @@ se llama a `onCerrar`. Sin eso solo se animaria la entrada.
 - **Solo se declara la hora de CIERRE.** El horario de apertura sigue pendiente y
   no se inventa: un horario falso hace que Google diga "abierto" cuando no.
 
+## Calidad del video — medida en dos ejes, no en uno
+
+No basta con mirar la nitidez: en un hero con scrub, cada salto del scroll
+obliga a decodificar un frame entero. Por eso cada version se mide con **SSIM**
+(fidelidad) Y con el **tiempo real de cada salto** en el navegador, con 24
+saltos cronometrados por version.
+
+| version | peso | SSIM | salto mediano | p90 |
+|---|---|---|---|---|
+| 960 CRF28 (la primera) | 4,1 MB | 0,912 | — | — |
+| 720 CRF25 | 3,6 MB | 0,902 | — | — |
+| 1280 CRF26 | 7,1 MB | 0,948 | 10,9 ms | 12,9 ms |
+| **1280 CRF18 (hoy)** | **14,7 MB** | **0,980** | **7,3 ms** | **8,6 ms** |
+| 1280 CRF14 | 20,9 MB | 0,988 | 7,4 ms | 18,9 ms |
+| 1280 CRF18 a 48 fps | 24,7 MB | 0,950 | 13,7 ms | 17,9 ms |
+
+**El presupuesto es 16,7 ms**, que es lo que dura un frame a 60 Hz. Pasarse de
+ahi se ve como tartamudeo.
+
+Dos resultados que no se esperaban:
+
+- **Mas calidad no ralentiza el salto.** CRF18 es el mas CONSISTENTE de todos.
+  CRF14 tiene mejor mediana pero su p90 se va a 18,9 ms: tiembla.
+- **Interpolar a 48 fps con `minterpolate` es peor en todo**: inventa los
+  frames intermedios y pierde fidelidad, duplica el tiempo de salto y se pasa
+  del presupuesto. Duplicar frames NO da fluidez.
+
+**Estado temporal:** hoy estan a maxima calidad porque el cliente pidio verlo
+sin mirar el peso. 14,7 MB + 10,3 MB. **Hay que revisarlo antes del final** —
+CRF26 baja a 7,1 MB perdiendo 0,03 de SSIM.
+
 ## El hero — decisiones medidas, no supuestas
 
 - **El mp4 de Veo traía 1 keyframe en 240** (ffprobe). Buscar un punto intermedio

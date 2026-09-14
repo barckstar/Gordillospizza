@@ -54,6 +54,11 @@ const SALTO_SECO_S = 1.5;
  */
 const FIN_SEGURO_S = 0.06;
 
+/** El chat arranca con el saludo escrito, no en blanco. */
+const ENLACE_PEDIDO = `${NEGOCIO.whatsapp}?text=${encodeURIComponent(
+  `Hola ${NEGOCIO.nombre}, quiero hacer un pedido.`,
+)}`;
+
 export function HeroScroll() {
   const { marca, titulo, bloques } = LANDING.hero;
 
@@ -90,16 +95,35 @@ export function HeroScroll() {
         1280: se veia un poster nitido y, al arrancar el video, la calidad
         BAJABA. En un monitor de 1920 ese 960 se estira al doble.
 
-        Medido con SSIM contra el original de Veo:
-          960 CRF28 (lo que habia)  4,1 MB  0,912
-          720 CRF25                 3,6 MB  0,902  <- peor: la resolucion
-                                                      pesa mas que el CRF
-          1280 CRF27                6,4 MB  0,942
-          1280 CRF26 (escritorio)   7,1 MB  0,948
-          960  CRF25 (movil)        5,3 MB  0,932
+        AHORA MISMO ESTAN A MAXIMA CALIDAD, A PROPOSITO Y DE FORMA TEMPORAL.
+        El cliente pidio ver como queda sin mirar el peso. Son 14,7 MB y
+        10,3 MB: HAY QUE REVISARLO antes de darlo por final.
 
-        El peso extra no toca el LCP: el video no se descarga hasta despues
-        del evento `load`, y con movimiento reducido no se descarga nunca.
+        Medido con SSIM contra el original de Veo, y con el tiempo real de
+        cada salto medido en el navegador (24 saltos por version):
+
+          version                  peso    SSIM    salto mediano / p90
+          960 CRF28 (la primera)   4,1 MB  0,912   —
+          720 CRF25                3,6 MB  0,902   <- peor pese a mejor CRF
+          1280 CRF26               7,1 MB  0,948   10,9 ms / 12,9 ms
+          1280 CRF18 (HOY)        14,7 MB  0,980    7,3 ms /  8,6 ms
+          1280 CRF14              20,9 MB  0,988    7,4 ms / 18,9 ms
+          1280 CRF18 a 48 fps     24,7 MB  0,950   13,7 ms / 17,9 ms
+
+        DOS COSAS QUE NO SE ESPERABAN:
+
+        1. Mas calidad NO ralentiza el salto. CRF18 es el mas CONSISTENTE de
+           todos (p90 de 8,6 ms, muy dentro de los 16,7 ms que dura un frame
+           a 60 Hz). CRF14 tiene mejor mediana pero su p90 se va a 18,9 ms:
+           por encima del presupuesto, o sea que tiembla.
+
+        2. Interpolar a 48 fps con `minterpolate` es PEOR EN TODO: inventa
+           los frames intermedios y pierde fidelidad (0,950), duplica el
+           tiempo de salto y se pasa del presupuesto (p90 17,9 ms). Duplicar
+           frames no da fluidez, la quita.
+
+        El peso no toca el LCP: el video no se descarga hasta despues del
+        evento `load`, y con movimiento reducido no se descarga nunca.
       */
       const angosto = window.matchMedia("(max-width: 768px)").matches;
       video.src = angosto ? "/hero/chef-960.mp4" : "/hero/chef-1280.mp4";
@@ -172,9 +196,10 @@ export function HeroScroll() {
         ultimoT = t;
 
         /*
-          Que bloque de texto toca. Se reparte el recorrido en tantas
-          franjas como bloques haya; el ultimo se queda fijo al final
-          para que el CTA no parpadee justo cuando el usuario llega.
+          Que bloque de texto toca. Se reparte el recorrido en tantas franjas
+          como bloques haya, y el ultimo se queda fijo hasta el final para que
+          el texto no parpadee al llegar al fondo. Los botones no entran en
+          este reparto: se ven siempre.
         */
         const activo = Math.min(marco3 - 1, Math.floor(t * marco3));
         for (let i = 0; i < marco3; i++) {
@@ -323,27 +348,41 @@ export function HeroScroll() {
                   {i === 0 ? bloque.titulo + ". " + bloque.texto : bloque.texto}
                 </p>
 
-                {i === bloques.length - 1 && (
-                  <div className="mt-8 flex flex-wrap justify-center gap-3">
-                    <a
-                      href={NEGOCIO.whatsapp}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center rounded-full bg-rojo px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-rojo-osc"
-                    >
-                      Pedir por WhatsApp
-                    </a>
-                    <a
-                      href="#menu"
-                      className="inline-flex items-center justify-center rounded-full border border-crema/30 px-7 py-3.5 text-sm font-semibold tracking-wide text-crema transition-colors hover:border-ambar hover:text-ambar"
-                    >
-                      Ver el menú
-                    </a>
-                  </div>
-                )}
               </div>
             </div>
           ))}
+        </div>
+
+        {/*
+          LOS BOTONES NO VIVEN DENTRO DE UN BLOQUE DE TEXTO.
+
+          Antes estaban dentro del tercero, asi que solo aparecian al final
+          del recorrido: quien se enganchaba con el video a mitad de camino no
+          tenia donde tocar para pedir, y tenia que seguir bajando a ciegas
+          hasta que aparecieran. La accion no puede depender de cuanto
+          scrolleaste.
+
+          Ahora son una capa propia, fija durante TODO el recorrido. Entran
+          con una `@keyframes` y no con el observador —estan sobre el
+          pliegue— por lo mismo que el texto del hero: el observador corre
+          despues de hidratar y los dejaria invisibles hasta que llegue el
+          JavaScript.
+        */}
+        <div className="hero-acciones">
+          <a
+            href={ENLACE_PEDIDO}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-full bg-rojo px-7 py-3.5 text-sm font-semibold tracking-wide text-white shadow-lg shadow-black/30 transition-colors hover:bg-rojo-osc"
+          >
+            Pedir por WhatsApp
+          </a>
+          <a
+            href="#menu"
+            className="inline-flex items-center justify-center rounded-full border border-crema/35 bg-negro/30 px-7 py-3.5 text-sm font-semibold tracking-wide text-crema backdrop-blur-sm transition-colors hover:border-ambar hover:text-ambar"
+          >
+            Ver el menú
+          </a>
         </div>
 
         <div className="hero-indicador" aria-hidden="true" />
