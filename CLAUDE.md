@@ -144,6 +144,25 @@ Sharing Debugger de Facebook (developers.facebook.com/tools/debug) con "Scrape
 Again" — comparten infraestructura. Compartir la URL con `?v=2` tambien sirve
 como prueba, porque es otra llave de cache.
 
+## El boton de ubicacion en el checkout
+
+Con el express confirmado, el checkout captura el punto exacto con
+`navigator.geolocation` — API del navegador: no cuesta nada, no pide llave y no
+suma dependencias. Solo exige HTTPS, y funciona en localhost y en Vercel.
+
+- **NO reemplaza a las señas escritas, las acompaña.** En Costa Rica las
+  direcciones son descriptivas: el mensajero se orienta con el texto y usa el
+  pin para el ultimo tramo. Por eso el campo de direccion sigue siendo
+  obligatorio aunque haya coordenadas.
+- **No hay geocodificacion inversa** (coordenadas -> nombre de calle) porque eso
+  si requiere una API de pago, y ademas no aporta: aqui las calles no tienen
+  nombre util.
+- En el mensaje va como **enlace de Google Maps**. `wa.me` no permite adjuntar
+  un pin de ubicacion, pero el mensajero toca el enlace y le abre la ruta.
+- Cada motivo de error tiene su propio mensaje: permiso denegado, tiempo
+  agotado o fallo generico. "No se pudo" a secas deja a la persona sin saber si
+  reintentar, revisar un permiso o escribir las señas a mano.
+
 ## Barra social
 
 Riel fijo al borde derecho con WhatsApp, Instagram, Facebook, Como llegar y
@@ -333,10 +352,8 @@ CRF26 baja a 7,1 MB perdiendo 0,03 de SSIM.
 - [ ] **Métodos de pago**: hoy el checkout ofrece Efectivo y Sinpe Movil, que son
       los dos universales en CR. **No se lista tarjeta** porque no sabemos si
       tienen datafono — eso se descubriria en la puerta, con la pizza en la mano.
-- [ ] **CONFIRMAR SI HACEN ENTREGAS A DOMICILIO.** El checkout ofrece "Express a
-      mi casa" y el FAQ lo da por hecho, pero el cliente nunca lo confirmo — se
-      asumio porque casi toda pizzeria en CR reparte. Si NO reparten, hay que
-      quitar la modalidad express del checkout y la pregunta del FAQ.
+- [x] **Entregas a domicilio CONFIRMADAS por el cliente** (2026-09-14). El
+      checkout lleva ademas el boton de ubicacion exacta.
 - [ ] Video de botellas (`assets-fuente/botellas-original.mp4`, 8 s vertical) sin usar
 - [x] Técnica del hero con scroll — mp4 todo-keyframes, medido
 - [ ] Decidir qué reemplaza al menú-video (aquel era un video por plato)

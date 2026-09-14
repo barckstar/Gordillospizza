@@ -72,16 +72,24 @@ export function HeroScroll() {
     const video = videoRef.current;
     if (!pista || !marco || !video) return;
 
+    /*
+      MOVIMIENTO REDUCIDO: EL SCRUB SIGUE, LO QUE SE APAGA ES LO AUTOMATICO.
+
+      Antes esto hacia `return` y el video no se descargaba siquiera. Suena
+      prudente y es un error: quien tiene esa preferencia activada —en Windows
+      la enciende tambien el ahorro de bateria— veia el poster fijo PARA
+      SIEMPRE, sin ninguna señal de que faltaba algo. El cliente lo reporto
+      como "scroleo y esta estatico", y tenia razon: parecia roto.
+
+      La preferencia existe para evitar movimiento NO SOLICITADO. Un scrub no
+      es eso: la persona controla cada frame con su propio dedo y se detiene
+      en el instante en que deja de desplazarse. Lo que si es no solicitado es
+      el parallax del puntero y el suavizado, que sigue moviendose un rato
+      DESPUES de que uno solto. Eso es lo que se apaga.
+    */
     const movimientoReducido = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
-    /*
-      Con movimiento reducido el video NO se descarga. No es solo no
-      animarlo: son 4 MB que esa persona no pidio. Queda el poster y el
-      primer bloque de texto, que el CSS ya deja visible.
-    */
-    if (movimientoReducido) return;
 
     let cancelado = false;
 
@@ -126,6 +134,16 @@ export function HeroScroll() {
         evento `load`, y con movimiento reducido no se descarga nunca.
       */
       const angosto = window.matchMedia("(max-width: 768px)").matches;
+      /*
+        `preload = "auto"` ANTES del `src`.
+
+        El atributo del marcado dice `none` para que el navegador no toque el
+        archivo hasta que nosotros decidamos. Pero una vez decidido hay que
+        cambiar la pista: con `none`, el navegador solo trae metadatos y cada
+        salto del scroll dispara una peticion por rango. Con un archivo de
+        14 MB eso se siente como que el video se traba.
+      */
+      video.preload = "auto";
       video.src = angosto ? "/hero/chef-960.mp4" : "/hero/chef-1280.mp4";
       video.load();
     };
@@ -212,10 +230,23 @@ export function HeroScroll() {
 
       // El seek, solo si el video ya tiene metadatos.
       if (video.readyState >= 1 && Number.isFinite(video.duration)) {
-        const objetivo = Math.min(
-          t * video.duration,
-          video.duration - FIN_SEGURO_S,
-        );
+        /*
+          El objetivo NUNCA pasa de lo que ya se descargo.
+
+          Pedirle al elemento un punto que todavia no tiene en el buffer lo
+          deja congelado hasta que llegue ese trozo. Clavandolo al final de lo
+          bufferado, el scrub se queda un poco atras mientras baja el archivo
+          y se pone al dia solo — que se retrase es tolerable, que se congele
+          no.
+        */
+        let tope = video.duration - FIN_SEGURO_S;
+        for (let i = 0; i < video.buffered.length; i++) {
+          if (video.buffered.start(i) <= 0.05) {
+            tope = Math.min(tope, video.buffered.end(i) - 0.05);
+            break;
+          }
+        }
+        const objetivo = Math.max(0, Math.min(t * video.duration, tope));
 
         if (Math.abs(objetivo - tiempoSuave) > SALTO_SECO_S) {
           tiempoSuave = objetivo;
@@ -226,7 +257,13 @@ export function HeroScroll() {
             SUAVIZADO_60HZ y en 120 Hz da la mitad por frame, o sea lo mismo
             por segundo. Con dt = 0 (primer frame) k = 0 y no se mueve nada.
           */
-          const k = 1 - Math.pow(1 - SUAVIZADO_60HZ, dt * 60);
+          /*
+            Con movimiento reducido el suavizado se anula: el video queda
+            clavado al scroll y no sigue moviendose despues de soltar.
+          */
+          const k = movimientoReducido
+            ? 1
+            : 1 - Math.pow(1 - SUAVIZADO_60HZ, dt * 60);
           tiempoSuave += (objetivo - tiempoSuave) * k;
         }
 

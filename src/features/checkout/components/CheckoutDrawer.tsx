@@ -11,6 +11,7 @@ import {
   type Modalidad,
 } from "../schema";
 import { construirMensaje, enviarPorWhatsApp } from "../lib/construirMensaje";
+import { BotonUbicacion } from "./BotonUbicacion";
 
 const CAMPO =
   "w-full rounded-xl border border-crema/15 bg-carbon px-4 py-3 text-sm text-crema placeholder:text-humo/60 focus:border-ambar focus:outline-none";
@@ -24,6 +25,7 @@ export function CheckoutDrawer({ onCerrar }: { onCerrar: () => void }) {
   const { lineas, total, vaciar } = useCarrito();
   const [modalidad, setModalidad] = useState<Modalidad>("retiro");
   const [errores, setErrores] = useState<Record<string, string>>({});
+  const [punto, setPunto] = useState<{ lat: number; lng: number } | null>(null);
   const { saliendo, pedirCierre, alTerminarAnimacion } = useModal(onCerrar);
 
   const enviar = (e: React.FormEvent<HTMLFormElement>) => {
@@ -36,6 +38,8 @@ export function CheckoutDrawer({ onCerrar }: { onCerrar: () => void }) {
       direccion: fd.get("direccion") ?? undefined,
       metodoPago: fd.get("metodoPago"),
       notas: fd.get("notas") || undefined,
+      lat: punto?.lat,
+      lng: punto?.lng,
     });
 
     if (!resultado.success) {
@@ -169,6 +173,17 @@ export function CheckoutDrawer({ onCerrar }: { onCerrar: () => void }) {
               {errores.direccion && (
                 <p className="mt-1 text-xs text-rojo-vivo">{errores.direccion}</p>
               )}
+
+              {/*
+                El punto exacto va JUNTO a las señas, no en vez de ellas. En
+                Costa Rica las direcciones son descriptivas: el mensajero usa
+                el texto para orientarse y el pin para el ultimo tramo.
+              */}
+              <BotonUbicacion
+                tieneUbicacion={punto !== null}
+                onUbicacion={(lat, lng) => setPunto({ lat, lng })}
+                onLimpiar={() => setPunto(null)}
+              />
             </div>
           )}
 

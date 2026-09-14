@@ -40,6 +40,14 @@ export const esquemaPedido = z
     direccion: z.string().trim().optional(),
     metodoPago: z.enum(METODOS_PAGO),
     notas: z.string().trim().max(280).optional(),
+    /*
+      Coordenadas del boton de ubicacion. OPCIONALES a proposito: son un
+      extra sobre las señas escritas, no un reemplazo. Se validan los rangos
+      porque una latitud de 200 no es un punto, es un dato corrupto que
+      mandaria al mensajero a ningun lado.
+    */
+    lat: z.number().min(-90).max(90).optional(),
+    lng: z.number().min(-180).max(180).optional(),
   })
   /*
     Un express sin dirección es un pedido que no se puede entregar. Se

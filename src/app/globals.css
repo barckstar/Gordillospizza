@@ -272,31 +272,17 @@ h3 {
   background: var(--color-ambar);
 }
 
-/*
-  Sin JavaScript, o con movimiento reducido: la pista se encoge a una
-  pantalla y queda el poster con el titular. Nunca una pagina en blanco
-  esperando un scroll que no va a mover nada.
-*/
-@media (prefers-reduced-motion: reduce), (scripting: none) {
-  .hero-pista {
-    height: 100svh;
-  }
-  .hero-bloque {
-    opacity: 0;
-    transform: none;
-  }
-  .hero-bloque[data-primero="true"] {
-    opacity: 1;
-  }
-  /*
-  Los botones del hero, visibles durante TODO el recorrido.
+/* ============================================================
+   BOTONES DEL HERO — visibles durante TODO el recorrido
+   ------------------------------------------------------------
+   Viven fuera de `.hero-capas` a proposito: esa capa cambia de
+   bloque segun el scroll, y la accion no puede depender de
+   cuanto bajaste. Entran con una `@keyframes` porque estan
+   sobre el pliegue — si dependieran del observador, que corre
+   despues de hidratar, quedarian invisibles hasta que llegue
+   el JavaScript.
+   ============================================================ */
 
-  Viven fuera de `.hero-capas` a proposito: esa capa cambia de bloque segun el
-  scroll, y la accion no puede depender de cuanto bajaste. Entran con una
-  `@keyframes` porque estan sobre el pliegue — si dependieran del observador,
-  que corre despues de hidratar, quedarian invisibles hasta que llegue el
-  JavaScript.
-*/
 @keyframes hero-acciones-entra {
   from {
     opacity: 0;
@@ -322,9 +308,43 @@ h3 {
   animation: hero-acciones-entra 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
 }
 
-.hero-indicador {
+/* ============================================================
+   SIN JAVASCRIPT: la pista se encoge a una pantalla
+   ------------------------------------------------------------
+   Sin JavaScript no hay quien mueva el video, asi que una pista
+   de 340svh serian tres pantallas de scroll sobre una imagen
+   quieta. Se encoge a una, queda el poster con el titular y los
+   botones, y se esconde la barra de progreso — que sin scrub no
+   significa nada.
+
+   OJO: esta consulta ya NO incluye `prefers-reduced-motion`.
+   Lo hacia, y era un error: con esa preferencia activada la
+   pista media 100svh, el recorrido daba CERO y el video se
+   quedaba clavado en el primer frame pasara lo que pasara. Se
+   reportaba como "scroleo y esta estatico", y parecia roto.
+   El scrub lo controla la persona con su propio dedo: no es
+   movimiento no solicitado. Lo que si lo es —el parallax del
+   puntero y el suavizado— se apaga aparte.
+   ============================================================ */
+
+@media (scripting: none) {
+  .hero-pista {
+    height: 100svh;
+  }
+  .hero-bloque {
+    opacity: 0;
+    transform: none;
+  }
+  .hero-bloque[data-primero="true"] {
+    opacity: 1;
+  }
+  .hero-indicador {
     display: none;
   }
+}
+
+/* Lo no solicitado, fuera: el parallax sigue al puntero sin que nadie lo pida. */
+@media (prefers-reduced-motion: reduce) {
   .hero-parallax {
     transform: none;
   }

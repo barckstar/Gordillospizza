@@ -41,6 +41,19 @@ export function construirMensaje(
 
   if (datos.modalidad === "express" && datos.direccion) {
     partes.push(datos.direccion);
+    /*
+      El enlace de Maps con el punto exacto.
+
+      `wa.me` no permite adjuntar un pin de ubicacion, asi que se manda el
+      enlace: el mensajero lo toca y le abre la ruta. Resuelve lo mismo y no
+      cuesta nada — las coordenadas salen de `navigator.geolocation`, que es
+      del navegador y no pide llave.
+    */
+    if (typeof datos.lat === "number" && typeof datos.lng === "number") {
+      partes.push(
+        `Ubicación exacta: https://maps.google.com/?q=${datos.lat.toFixed(6)},${datos.lng.toFixed(6)}`,
+      );
+    }
     // El costo del express lo cobra el mensajero al llegar, no el local.
     // Decirlo evita el malentendido de que el total ya lo incluye.
     partes.push("El costo del express se coordina con el mensajero.");
