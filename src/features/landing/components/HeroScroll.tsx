@@ -55,19 +55,43 @@ const TOLERANCIA_S = 0.015;
  * 1,6x es el maximo que todavia se lee como reproduccion. Por encima vuelve
  * a sentirse acelerado.
  */
-const VELOCIDAD_MAXIMA = 1.6;
+const VELOCIDAD_BASE = 1.6;
 /**
- * Salto a partir del cual no se suaviza, se corta seco.
+ * Cuanta brecha se tolera antes de acelerar, en segundos de video.
  *
- * Solo para teletransportes de verdad: recargar la pagina a media pista, o
- * volver de un ancla con el navegador restaurando el scroll. Tres segundos
- * son casi un tercio del video — mas que eso, esperar a que se reproduzca
- * seria ver la pelicula entera.
- *
- * Antes eran 1,5 s y se comia el efecto: con el tope de velocidad, cerrar un
- * hueco de 1,5 s es justo lo que queremos que se vea reproduciendose.
+ * Por debajo de esto el video va a VELOCIDAD_BASE y se ve como reproduccion.
+ * Por encima empieza a correr mas para alcanzar al scroll.
  */
-const SALTO_SECO_S = 3;
+const HOLGURA_S = 0.35;
+/** Cuanto acelera por cada segundo de brecha que pasa de la holgura. */
+const GANANCIA = 4;
+/**
+ * Techo absoluto. Sin el, un scroll muy rapido pediria velocidades de 20x y
+ * volveriamos al corte que vinimos a arreglar.
+ */
+const VELOCIDAD_TECHO = 8;
+/**
+ * TELETRANSPORTE: cuanto puede saltar el SCROLL de un frame al siguiente
+ * antes de que dejemos de suavizar y cortemos seco. Va en fraccion de la
+ * pista (0 a 1).
+ *
+ * OJO CON LA DIFERENCIA, QUE COSTO UN BUG: esto mide el salto del SCROLL en
+ * UN frame, no el tamaño de la brecha acumulada.
+ *
+ * La version anterior cortaba seco cuando la BRECHA entre el video y su
+ * objetivo pasaba de 3 s. Suena parecido y no lo es: con el tope de
+ * velocidad, scrollear rapido HACE que la brecha crezca —esa es justamente
+ * la idea— asi que el corte se disparaba una y otra vez. Crecia, cortaba,
+ * crecia, cortaba. El cliente lo describio como "se teletransporta de frame
+ * a frame", y era exactamente eso.
+ *
+ * Un atraso acumulado y un salto real son cosas distintas. Un salto real
+ * —recargar a media pista, volver de un ancla, arrastrar la barra de
+ * scroll— mueve el scroll un monton EN UN SOLO FRAME. Eso es lo que se
+ * detecta aqui. 25% de la pista en un frame no se alcanza ni scrolleando a
+ * lo bestia.
+ */
+const TELETRANSPORTE_T = 0.25;
 /**
  * Colchon contra el final del video. MEDIDO, no por si acaso.
  *
@@ -199,6 +223,7 @@ export function HeroScroll() {
     let corriendo = false;
     let tiempoSuave = 0;
     let ultimoT = -1;
+    let tPrevio = -1;
     let ultimoSello = 0;
 
     const progreso = () => {
@@ -232,6 +257,12 @@ export function HeroScroll() {
       ultimoSello = sello;
 
       const t = progreso();
+      /*
+        `ultimoT` solo se actualiza cuando el cambio es perceptible, asi que
+        no sirve para detectar el salto de ESTE frame. Para eso va aparte.
+      */
+      const saltoDeScroll = tPrevio < 0 ? 1 : Math.abs(t - tPrevio);
+      tPrevio = t;
 
       // Las variables CSS solo se escriben si cambio algo perceptible.
       if (Math.abs(t - ultimoT) > 0.001) {
@@ -273,7 +304,8 @@ export function HeroScroll() {
         }
         const objetivo = Math.max(0, Math.min(t * video.duration, tope));
 
-        if (Math.abs(objetivo - tiempoSuave) > SALTO_SECO_S) {
+        if (saltoDeScroll > TELETRANSPORTE_T) {
+          // Salto real: no hay nada que reproducir, se pinta el destino.
           tiempoSuave = objetivo;
         } else {
           /*
@@ -302,7 +334,24 @@ export function HeroScroll() {
             justo eso — movimiento que sigue despues de soltar.
           */
           if (!movimientoReducido && dt > 0) {
-            const maximo = VELOCIDAD_MAXIMA * dt;
+            /*
+              LA VELOCIDAD PERMITIDA CRECE CON LA BRECHA, de forma continua.
+
+              Con un tope fijo de 1,6x, scrollear de golpe toda la pista
+              dejaba al video reproduciendose SOLO durante seis segundos
+              despues de que la persona ya se habia detenido. Con un corte
+              seco, se teletransportaba. Ninguna de las dos.
+
+              Asi: mientras la brecha es chica va a 1,6x y se lee como
+              reproduccion; cuando se agranda acelera para alcanzar al
+              scroll, sin discontinuidades. El techo evita volver al corte.
+            */
+            const brecha = Math.abs(objetivo - tiempoSuave);
+            const permitida = Math.min(
+              VELOCIDAD_TECHO,
+              VELOCIDAD_BASE + Math.max(0, brecha - HOLGURA_S) * GANANCIA,
+            );
+            const maximo = permitida * dt;
             if (Math.abs(paso) > maximo) paso = Math.sign(paso) * maximo;
           }
 

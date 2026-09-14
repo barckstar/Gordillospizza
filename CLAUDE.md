@@ -320,10 +320,36 @@ no.
 Por encima de 1,6x vuelve a sentirse acelerado. Es la perilla a tocar si el
 cliente lo quiere mas pegado al dedo (subir) o mas cinematografico (bajar).
 
-`SALTO_SECO_S` subio de 1,5 a 3 s: con el tope de velocidad, cerrar un hueco
-de 1,5 s es justo lo que queremos que se vea reproduciendose. El corte seco
-queda solo para teletransportes de verdad — recargar a media pista, o volver
-de un ancla con el scroll restaurado.
+### Y por que despues "se teletransportaba de frame a frame"
+
+Un tope FIJO de 1,6x no alcanza, y el corte seco por tamaño de brecha lo
+empeoraba. Con el tope, scrollear rapido HACE que la brecha crezca —esa es la
+idea— asi que el corte, que miraba la brecha, se disparaba una y otra vez:
+crecia, cortaba, crecia, cortaba.
+
+**Un atraso acumulado y un salto real de scroll son cosas distintas**, y las
+estaba midiendo con la misma vara. Ahora:
+
+- **El teletransporte se detecta por el salto del SCROLL en UN frame**
+  (`TELETRANSPORTE_T = 0.25`), no por la brecha. 25% de la pista en un frame
+  no se alcanza ni scrolleando a lo bestia: solo pasa al recargar a media
+  pista, volver de un ancla o arrastrar la barra.
+- **La velocidad permitida CRECE con la brecha**, de forma continua:
+  `1,6x + (brecha - 0,35 s) x 4`, con techo de `8x`. Con brecha chica se lee
+  como reproduccion; cuando se agranda, acelera para alcanzar al scroll sin
+  ninguna discontinuidad.
+
+Simulado a 60 Hz:
+
+| escenario | antes | ahora |
+|---|---|---|
+| scroll rapido continuo | **2 teletransportes** | 0 · vel max 4,00x · atraso 0,04 s |
+| scroll muy violento | **2 teletransportes** | 0 · vel max 8,00x · atraso 0,01 s |
+| un tick suelto | — | vel max 2,20x · llega en 0,57 s |
+
+Un tope fijo tenia el defecto opuesto: scrollear de golpe toda la pista dejaba
+al video reproduciendose SOLO durante seis segundos despues de que la persona
+ya se habia detenido.
 
 ## El hero — decisiones medidas, no supuestas
 
